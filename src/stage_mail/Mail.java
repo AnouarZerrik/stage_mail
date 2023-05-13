@@ -24,13 +24,18 @@ public class Mail {
 		Mail mail = new Mail();
 		mail.setupServerProperties();
 		// mail.draftEmail();
-		// mail.draftEmailsans_att();
-		mail.sendEmail();
+		
+		List<String> hi = new ArrayList<>();
+		hi.add("anouarzerrik@gmail.com");
+			hi.add("abdelilah.kouzih@usmba.ac.ma");
+			hi.add("ayoubelfakraoui@gmail.com");
+		 mail.draftEmailsans_att("hi vb" , "fin" , hi);
+		mail.sendEmail("anoirzerrik2014@gmail.com" , "vtkzqhsattbtzmtf");
 	}
 
-	void sendEmail() throws MessagingException {
-		String fromUser = "anoirzerrik2014@gmail.com";
-		String fromUserPassword = "vtkzqhsattbtzmtf";
+	void sendEmail(String user , String password) throws MessagingException {
+		String fromUser = user;
+		String fromUserPassword = password; //vtkzqhsattbtzmtf
 
 		String emailHost = "smtp.gmail.com";
 		Transport transport = newSession.getTransport("smtp");
@@ -40,16 +45,18 @@ public class Mail {
 		System.out.println("Email successfully sent!!!");
 	}
 
-	MimeMessage draftEmailsans_att(String Subject, String Body)
+	MimeMessage draftEmailsans_att(String Subject, String Body , List<String> emails)
 			throws AddressException, MessagingException, IOException {
 		//String[] emailReceipients = { "anouarzerrik@gmail.com" };
 		// String b = "C:\\Users\\UTENTE\\Desktop\\send.txt";
 
 		List<String> emailReceipients1 = new ArrayList<>();
+		
+		emailReceipients1.addAll(emails);
 
-		emailReceipients1.add("anouarzerrik@gmail.com");
-		emailReceipients1.add("abdelilah.kouzih@usmba.ac.ma");
-		emailReceipients1.add("ayoubelfakraoui@gmail.com");
+	//	emailReceipients1.add("anouarzerrik@gmail.com");
+	//	emailReceipients1.add("abdelilah.kouzih@usmba.ac.ma");
+	//	emailReceipients1.add("ayoubelfakraoui@gmail.com");
 		String emailSubject = Subject;
 		String emailBody = Body;
 		mimeMessage = new MimeMessage(newSession);
@@ -71,16 +78,18 @@ public class Mail {
 		return mimeMessage;
 	}
 
-	MimeMessage draftEmail(String f1, String f2, String Subject, String Body)
+	MimeMessage draftEmail(String f1, String f2, String Subject, String Body , List<String> emails)
 			throws AddressException, MessagingException, IOException {
 		//String[] emailReceipients = { "anouarzerrik@gmail.com" };
 
 		List<String> emailReceipients1 = new ArrayList<>();
+		
+		emailReceipients1.addAll(emails);
 
-		emailReceipients1.add("anouarzerrik@gmail.com");
+	//	emailReceipients1.add("anouarzerrik@gmail.com");
 
-		emailReceipients1.add("abdelilah.kouzih@usmba.ac.ma");
-		emailReceipients1.add("ayoubelfakraoui@gmail.com");
+	//	emailReceipients1.add("abdelilah.kouzih@usmba.ac.ma");
+	//	emailReceipients1.add("ayoubelfakraoui@gmail.com");
 		// emailReceipients1.add("anouar.zerrik@usmba.ac.ma");
 		String b = "";// C:\\Users\\UTENTE\\Desktop\\send.txt
 		String emailSubject = Subject;
