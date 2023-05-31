@@ -2,6 +2,7 @@ package stage_mail;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
@@ -24,18 +25,23 @@ public class Mail {
 		Mail mail = new Mail();
 		mail.setupServerProperties();
 		// mail.draftEmail();
-		
+
 		List<String> hi = new ArrayList<>();
 		hi.add("anouarzerrik@gmail.com");
-			hi.add("abdelilah.kouzih@usmba.ac.ma");
-			hi.add("ayoubelfakraoui@gmail.com");
-		 mail.draftEmailsans_att("hi vb" , "fin" , hi);
-		mail.sendEmail("anoirzerrik2014@gmail.com" , "vtkzqhsattbtzmtf");
+		hi.add("anouar.zerrik@usmba.ac.ma");
+		int i = 0;
+		for (String element : hi) {
+			// mail.draftEmailsans_att1("test", "new", element);
+			mail.draftEmail2(
+					"C:\\Users\\UTENTE\\Desktop\\send.txt;C:\\Users\\UTENTE\\Desktop\\Nouveau document texte.txt",
+					"HI???????????", "Fin", element);
+			mail.sendEmail("anoirzerrik2014@gmail.com", "vtkzqhsattbtzmtf");
+		}
 	}
 
-	void sendEmail(String user , String password) throws MessagingException {
+	void sendEmail(String user, String password) throws MessagingException {
 		String fromUser = user;
-		String fromUserPassword = password; //vtkzqhsattbtzmtf
+		String fromUserPassword = password; // vtkzqhsattbtzmtf
 
 		String emailHost = "smtp.gmail.com";
 		Transport transport = newSession.getTransport("smtp");
@@ -45,18 +51,18 @@ public class Mail {
 		System.out.println("Email successfully sent!!!");
 	}
 
-	MimeMessage draftEmailsans_att(String Subject, String Body , List<String> emails)
+	MimeMessage draftEmailsans_att(String Subject, String Body, List<String> emails)
 			throws AddressException, MessagingException, IOException {
-		//String[] emailReceipients = { "anouarzerrik@gmail.com" };
+		// String[] emailReceipients = { "anouarzerrik@gmail.com" };
 		// String b = "C:\\Users\\UTENTE\\Desktop\\send.txt";
 
 		List<String> emailReceipients1 = new ArrayList<>();
-		
+
 		emailReceipients1.addAll(emails);
 
-	//	emailReceipients1.add("anouarzerrik@gmail.com");
-	//	emailReceipients1.add("abdelilah.kouzih@usmba.ac.ma");
-	//	emailReceipients1.add("ayoubelfakraoui@gmail.com");
+		// emailReceipients1.add("anouarzerrik@gmail.com");
+		// emailReceipients1.add("abdelilah.kouzih@usmba.ac.ma");
+		// emailReceipients1.add("ayoubelfakraoui@gmail.com");
 		String emailSubject = Subject;
 		String emailBody = Body;
 		mimeMessage = new MimeMessage(newSession);
@@ -64,7 +70,7 @@ public class Mail {
 		for (String element : emailReceipients1) {
 			mimeMessage.addRecipient(Message.RecipientType.TO, new InternetAddress(element));
 		}
-		
+
 		mimeMessage.setSubject(emailSubject);
 
 		MimeMultipart multiPart = new MimeMultipart();
@@ -78,18 +84,51 @@ public class Mail {
 		return mimeMessage;
 	}
 
-	MimeMessage draftEmail(String f1, String f2, String Subject, String Body , List<String> emails)
+	MimeMessage draftEmailsans_att1(String Subject, String Body, String email)
 			throws AddressException, MessagingException, IOException {
-		//String[] emailReceipients = { "anouarzerrik@gmail.com" };
+		// String[] emailReceipients = { "anouarzerrik@gmail.com" };
+		// String b = "C:\\Users\\UTENTE\\Desktop\\send.txt";
 
 		List<String> emailReceipients1 = new ArrayList<>();
-		
+
+		emailReceipients1.add(email);
+
+		// emailReceipients1.add("anouarzerrik@gmail.com");
+		// emailReceipients1.add("abdelilah.kouzih@usmba.ac.ma");
+		// emailReceipients1.add("ayoubelfakraoui@gmail.com");
+		String emailSubject = Subject;
+		String emailBody = Body;
+		mimeMessage = new MimeMessage(newSession);
+
+		for (String element : emailReceipients1) {
+			mimeMessage.addRecipient(Message.RecipientType.TO, new InternetAddress(element));
+		}
+
+		mimeMessage.setSubject(emailSubject);
+
+		MimeMultipart multiPart = new MimeMultipart();
+
+		MimeBodyPart messageBodyPart = new MimeBodyPart();
+		messageBodyPart.setText(emailBody);
+
+		multiPart.addBodyPart(messageBodyPart);
+		mimeMessage.setContent(multiPart);
+
+		return mimeMessage;
+	}
+
+	MimeMessage draftEmail(String f1, String f2, String Subject, String Body, List<String> emails)
+			throws AddressException, MessagingException, IOException {
+		// String[] emailReceipients = { "anouarzerrik@gmail.com" };
+
+		List<String> emailReceipients1 = new ArrayList<>();
+
 		emailReceipients1.addAll(emails);
 
-	//	emailReceipients1.add("anouarzerrik@gmail.com");
+		// emailReceipients1.add("anouarzerrik@gmail.com");
 
-	//	emailReceipients1.add("abdelilah.kouzih@usmba.ac.ma");
-	//	emailReceipients1.add("ayoubelfakraoui@gmail.com");
+		// emailReceipients1.add("abdelilah.kouzih@usmba.ac.ma");
+		// emailReceipients1.add("ayoubelfakraoui@gmail.com");
 		// emailReceipients1.add("anouar.zerrik@usmba.ac.ma");
 		String b = "";// C:\\Users\\UTENTE\\Desktop\\send.txt
 		String emailSubject = Subject;
@@ -120,6 +159,99 @@ public class Mail {
 			MimeBodyPart attachmentBodyPart2 = new MimeBodyPart();
 			attachmentBodyPart2.attachFile(k);
 			multiPart.addBodyPart(attachmentBodyPart2);
+		}
+
+		multiPart.addBodyPart(messageBodyPart);
+		mimeMessage.setContent(multiPart);
+
+		return mimeMessage;
+	}
+
+	MimeMessage draftEmail1(File[] f1, String Subject, String Body, List<String> emails)
+			throws AddressException, MessagingException, IOException {
+		// String[] emailReceipients = { "anouarzerrik@gmail.com" };
+
+		List<String> emailReceipients1 = new ArrayList<>();
+
+		emailReceipients1.addAll(emails);
+
+		// emailReceipients1.add("anouarzerrik@gmail.com");
+
+		// emailReceipients1.add("abdelilah.kouzih@usmba.ac.ma");
+		// emailReceipients1.add("ayoubelfakraoui@gmail.com");
+		// emailReceipients1.add("anouar.zerrik@usmba.ac.ma");
+		String b = "";// C:\\Users\\UTENTE\\Desktop\\send.txt
+		String emailSubject = Subject;
+		String emailBody = Body;
+		mimeMessage = new MimeMessage(newSession);
+
+		for (String element : emailReceipients1) {
+			mimeMessage.addRecipient(Message.RecipientType.TO, new InternetAddress(element));
+		}
+
+		mimeMessage.setSubject(emailSubject);
+
+		MimeMultipart multiPart = new MimeMultipart();
+
+		MimeBodyPart messageBodyPart = new MimeBodyPart();
+		messageBodyPart.setText(emailBody);
+
+		if (f1 != null) {
+			for (File f : f1) {
+
+				MimeBodyPart attachmentBodyPart = new MimeBodyPart();
+				File file = new File(f.getAbsolutePath());
+				attachmentBodyPart.attachFile(file);
+				multiPart.addBodyPart(attachmentBodyPart);
+
+			}
+		}
+
+		multiPart.addBodyPart(messageBodyPart);
+		mimeMessage.setContent(multiPart);
+
+		return mimeMessage;
+	}
+
+	MimeMessage draftEmail2(String f1, String Subject, String Body, String emails)
+			throws AddressException, MessagingException, IOException {
+		// String[] emailReceipients = { "anouarzerrik@gmail.com" };
+
+		List<String> emailReceipients1 = new ArrayList<>();
+
+		emailReceipients1.add(emails);
+
+		// emailReceipients1.add("anouarzerrik@gmail.com");
+
+		// emailReceipients1.add("abdelilah.kouzih@usmba.ac.ma");
+		// emailReceipients1.add("ayoubelfakraoui@gmail.com");
+		// emailReceipients1.add("anouar.zerrik@usmba.ac.ma");
+		String b = "";// C:\\Users\\UTENTE\\Desktop\\send.txt
+		String emailSubject = Subject;
+		String emailBody = Body;
+		mimeMessage = new MimeMessage(newSession);
+
+		for (String element : emailReceipients1) {
+			mimeMessage.addRecipient(Message.RecipientType.TO, new InternetAddress(element));
+		}
+
+		mimeMessage.setSubject(emailSubject);
+
+		MimeMultipart multiPart = new MimeMultipart();
+
+		MimeBodyPart messageBodyPart = new MimeBodyPart();
+		messageBodyPart.setText(emailBody);
+
+		if (f1 != null) {
+			String[] pathes = f1.split(";");
+			for (String f : pathes) {
+
+				MimeBodyPart attachmentBodyPart = new MimeBodyPart();
+				File file = new File(f);
+				attachmentBodyPart.attachFile(file);
+				multiPart.addBodyPart(attachmentBodyPart);
+
+			}
 		}
 
 		multiPart.addBodyPart(messageBodyPart);

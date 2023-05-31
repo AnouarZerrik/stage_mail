@@ -26,7 +26,7 @@ import javax.swing.SwingConstants;
 import javax.swing.JSeparator;
 import java.awt.Color;
 
-public class Form extends JFrame {
+public class cntct extends JFrame {
 
 	private JPanel panel;
 	private JTextField sujet_txt;
@@ -36,7 +36,8 @@ public class Form extends JFrame {
 
 	public String user_mail;
 	public List<String> emailReceipients = new ArrayList<>();
-	private JTextField df;
+	
+	File[] files;
 
 	/**
 	 * Launch the application.
@@ -48,10 +49,10 @@ public class Form extends JFrame {
 					String user = "anoirzerrik2014@gmail.com";
 					List<String> hi = new ArrayList();
 					hi.add("anouarzerrik@gmail.com");
-				//	hi.add("abdelilah.kouzih@usmba.ac.ma");
+			//	hi.add("anouar.zerrik@usmba.ac.ma");
 				//	hi.add("ayoubelfakraoui@gmail.com");
 					
-					Form frame = new Form(user,hi);
+					cntct frame = new cntct(user,hi);
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -63,11 +64,11 @@ public class Form extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public Form(String user_mail, List<String> emailReceipients) {
+	public cntct(String user_mail, List<String> emailReceipients) {
 		setResizable(false);
 
-		Form.this.user_mail = user_mail;
-		Form.this.emailReceipients = emailReceipients;
+		cntct.this.user_mail = user_mail;
+		cntct.this.emailReceipients = emailReceipients;
 
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 665, 584);
@@ -131,30 +132,31 @@ public class Form extends JFrame {
 						lblNewLabel_4.setVisible(true);
 						mail.setupServerProperties();
 
-						if (!attachmentField.getText().isEmpty() || !attachmentField2.getText().isEmpty()) {
+						if (!attachmentField.getText().isEmpty()) {
 							try {
-								mail.draftEmail(attachmentField.getText(), attachmentField2.getText(),
-										sujet_txt.getText(), body_txt.getText(), Form.this.emailReceipients);
+								mail.draftEmail1(files,
+										sujet_txt.getText(), body_txt.getText(), cntct.this.emailReceipients);
 							} catch (MessagingException | IOException e1) {
 								// TODO Auto-generated catch block
 								e1.printStackTrace();
 							}
 							try {
-								mail.sendEmail(Form.this.user_mail, password.getText());
+								mail.sendEmail(cntct.this.user_mail, password.getText());
 							} catch (MessagingException e1) {
 								// TODO Auto-generated catch block
 								e1.printStackTrace();
 							}
 						} else if (attachmentField.getText().isEmpty() && attachmentField2.getText().isEmpty()) {
 							try {
-								mail.draftEmailsans_att(sujet_txt.getText(), body_txt.getText(),
-										Form.this.emailReceipients);
+								//mail.draftEmailsans_att(sujet_txt.getText(), body_txt.getText(),cntct.this.emailReceipients);
+								mail.draftEmail1(files,
+										sujet_txt.getText(), body_txt.getText(), cntct.this.emailReceipients);
 							} catch (MessagingException | IOException e1) {
 								// TODO Auto-generated catch block
 								e1.printStackTrace();
 							}
 							try {
-								mail.sendEmail(Form.this.user_mail, password.getText());
+								mail.sendEmail(cntct.this.user_mail, password.getText());
 							} catch (MessagingException e1) {
 								// TODO Auto-generated catch block
 								e1.printStackTrace();
@@ -181,15 +183,33 @@ public class Form extends JFrame {
 		choose.setFont(new Font("Tahoma", Font.BOLD, 11));
 		choose.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				
+				
+				JFileChooser fileChooser = new JFileChooser();
+			      fileChooser.setMultiSelectionEnabled(true); // permet la sélection multiple de fichiers
 
-				JFileChooser chooser = new JFileChooser();
-				int returnVal = chooser.showOpenDialog(Form.this);
-				if (returnVal == JFileChooser.APPROVE_OPTION) {
-					File file = chooser.getSelectedFile();
-					attachmentField.setText(file.getAbsolutePath());
-				}
+			      // Affichage de la boîte de dialogue pour la sélection des fichiers
+			      int result = fileChooser.showOpenDialog(cntct.this);
+			      
+			      // Traitement des fichiers sélectionnés
+			      if (result == JFileChooser.APPROVE_OPTION) {
+			          files = fileChooser.getSelectedFiles(); // récupère les fichiers sélectionnés
+			    /*     for (File file : files) {
+			            System.out.println("Fichier sélectionné : " + file.getName());
+			         }*/
+			         StringBuilder sb = new StringBuilder();
+			         for (File file : files) {
+			            sb.append(file.getName()).append(" || ");
+			         }
+			         String filenames = sb.toString();
+			         if (filenames.length() > 0) {
+			            filenames = filenames.substring(0, filenames.length() - 2);
+			         }
+			         attachmentField.setText(filenames);
+			      }
+			      }
 
-			}
+			
 		});
 		choose.setBounds(514, 135, 89, 23);
 		panel.add(choose);
@@ -210,7 +230,7 @@ public class Form extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 
 				JFileChooser chooser = new JFileChooser();
-				int returnVal = chooser.showOpenDialog(Form.this);
+				int returnVal = chooser.showOpenDialog(cntct.this);
 				if (returnVal == JFileChooser.APPROVE_OPTION) {
 					File file = chooser.getSelectedFile();
 					attachmentField2.setText(file.getAbsolutePath());
@@ -241,11 +261,6 @@ public class Form extends JFrame {
 		lblNewLabel_1_1.setFont(new Font("Tahoma", Font.BOLD, 17));
 		lblNewLabel_1_1.setBounds(10, 409, 120, 14);
 		panel.add(lblNewLabel_1_1);
-		
-		df = new JTextField();
-		df.setBounds(137, 438, 86, 20);
-		panel.add(df);
-		df.setColumns(10);
 
 	}
 }
